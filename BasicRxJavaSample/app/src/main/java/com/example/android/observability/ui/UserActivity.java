@@ -37,9 +37,9 @@ public class UserActivity extends AppCompatActivity {
 
     private static final String TAG = UserActivity.class.getSimpleName();
 
-    private TextView mUserName;
+    private TextView mTvUserName;
 
-    private EditText mUserNameInput;
+    private EditText mEtUserNameInput;
 
     private Button mUpdateButton;
 
@@ -54,8 +54,8 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        mUserName = findViewById(R.id.user_name);
-        mUserNameInput = findViewById(R.id.user_name_input);
+        mTvUserName = findViewById(R.id.user_name);
+        mEtUserNameInput = findViewById(R.id.user_name_input);
         mUpdateButton = findViewById(R.id.update_user);
 
         mViewModelFactory = Injection.provideViewModelFactory(this);
@@ -72,7 +72,7 @@ public class UserActivity extends AppCompatActivity {
         mDisposable.add(mViewModel.getUserName()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userName -> mUserName.setText(userName),
+                .subscribe(userName -> mTvUserName.setText(userName),
                         throwable -> Log.e(TAG, "Unable to update username", throwable)));
     }
 
@@ -85,7 +85,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void updateUserName() {
-        String userName = mUserNameInput.getText().toString();
+        String userName = mEtUserNameInput.getText().toString();
         // Disable the update button until the user name update has been done
         mUpdateButton.setEnabled(false);
         // Subscribe to updating the user name.

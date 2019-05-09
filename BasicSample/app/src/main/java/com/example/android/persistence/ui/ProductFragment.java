@@ -16,15 +16,17 @@
 
 package com.example.android.persistence.ui;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.android.persistence.R;
 import com.example.android.persistence.databinding.ProductFragmentBinding;
@@ -32,6 +34,7 @@ import com.example.android.persistence.db.entity.CommentEntity;
 import com.example.android.persistence.db.entity.ProductEntity;
 import com.example.android.persistence.model.Comment;
 import com.example.android.persistence.viewmodel.ProductViewModel;
+import com.example.android.persistence.viewmodel.ShareViewModel;
 
 import java.util.List;
 
@@ -45,8 +48,8 @@ public class ProductFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         // Inflate this data binding layout
         mBinding = DataBindingUtil.inflate(inflater, R.layout.product_fragment, container, false);
 
@@ -71,12 +74,26 @@ public class ProductFragment extends Fragment {
         ProductViewModel.Factory factory = new ProductViewModel.Factory(
                 getActivity().getApplication(), getArguments().getInt(KEY_PRODUCT_ID));
 
-        final ProductViewModel model = ViewModelProviders.of(this, factory)
+        ProductViewModel model = ViewModelProviders.of(this, factory)
                 .get(ProductViewModel.class);
 
+//        ProductViewModel viewModel = ViewModelProviders.of(this).get(ProductViewModel.class);
         mBinding.setProductViewModel(model);
 
         subscribeToModel(model);
+
+
+        ShareViewModel shareViewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
+        shareViewModel.setData(new ProductEntity());
+
+
+        ShareViewModel shareViewModel1 = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
+        shareViewModel1.getData().observe(this, new Observer<ProductEntity>() {
+            @Override
+            public void onChanged(ProductEntity productEntity) {
+                // update UI
+            }
+        });
     }
 
     private void subscribeToModel(final ProductViewModel model) {
@@ -103,7 +120,9 @@ public class ProductFragment extends Fragment {
         });
     }
 
-    /** Creates product fragment for specific product ID */
+    /**
+     * Creates product fragment for specific product ID
+     */
     public static ProductFragment forProduct(int productId) {
         ProductFragment fragment = new ProductFragment();
         Bundle args = new Bundle();

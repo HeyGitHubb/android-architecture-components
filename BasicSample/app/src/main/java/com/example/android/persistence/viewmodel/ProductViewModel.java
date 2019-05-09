@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ProductViewModel extends AndroidViewModel {
 
-    private final LiveData<ProductEntity> mObservableProduct;
+    private final LiveData<ProductEntity> mObservableProductData;
 
     public ObservableField<ProductEntity> product = new ObservableField<>();
 
@@ -47,7 +47,7 @@ public class ProductViewModel extends AndroidViewModel {
         mProductId = productId;
 
         mObservableComments = repository.loadComments(mProductId);
-        mObservableProduct = repository.loadProduct(mProductId);
+        mObservableProductData = repository.loadProduct(mProductId);
     }
 
     /**
@@ -58,7 +58,7 @@ public class ProductViewModel extends AndroidViewModel {
     }
 
     public LiveData<ProductEntity> getObservableProduct() {
-        return mObservableProduct;
+        return mObservableProductData;
     }
 
     public void setProduct(ProductEntity product) {
